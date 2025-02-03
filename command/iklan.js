@@ -41,12 +41,6 @@ function scheduleMessages() {
     });
 }
 
-// Command to start the bot and show the main menu
-bot.onText(/\/start/, (msg) => {
-    const chatId = msg.chat.id;
-    showMainMenu(chatId);
-});
-
 // Function to show the main menu with inline buttons
 function showMainMenu(chatId) {
     const options = {
