@@ -31,7 +31,7 @@
 `1. copy and paste in terminal`
 
 ```bash
-wget https://raw.githubusercontent.com/abowowiwendi/node-bot-wrt/master/install.sh -O /usr/bin/node-bot && chmod +x /usr/bin/node-bot
+wget https://raw.githubusercontent.com/bowowiwendi/node-bot-wrt/master/install.sh -O /usr/bin/node-bot && chmod +x /usr/bin/node-bot
 ```
 
 `2. installing bot`
