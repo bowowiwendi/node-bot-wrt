@@ -5,7 +5,6 @@ export const cmds = ["iklan"];
 export const exec = async (bot, msg, chatId, messageId) => {
         showMainMenu(chatId);
 };
-
 // Store group IDs, settings, and message templates
 let groups = [];
 let settings = {
@@ -41,6 +40,13 @@ function scheduleMessages() {
     });
 }
 
+// Command to start the bot and show the main menu
+/** 
+bot.onText(/\/start/, (msg) => {
+    const chatId = msg.chat.id;
+    showMainMenu(chatId);
+});
+ */
 // Function to show the main menu with inline buttons
 function showMainMenu(chatId) {
     const options = {
@@ -137,8 +143,8 @@ bot.on('callback_query', (callbackQuery) => {
                 bot.sendMessage(chatId, `Template "${templateName}" updated!`);
             });
         }
-    } else if (data.startsWith('delete_')) {
-        const templateName = data.split('_')[1];
+    } else if (data.startsWith('delete_template_')) {
+        const templateName = data.split('_')[2];
         messageTemplates = messageTemplates.filter(t => t.name !== templateName);
         bot.sendMessage(chatId, `Template "${templateName}" deleted!`);
     }
@@ -148,7 +154,7 @@ bot.on('callback_query', (callbackQuery) => {
 function showTemplateMenu(chatId) {
     const templateButtons = messageTemplates.map(t => [
         { text: `Edit ${t.name}`, callback_data: `template_${t.name}` },
-        { text: `Delete ${t.name}`, callback_data: `delete_${t.name}` },
+        { text: `Delete ${t.name}`, callback_data: `delete_template_${t.name}` },
     ]);
     const options = {
         reply_markup: {
