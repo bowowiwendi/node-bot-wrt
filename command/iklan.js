@@ -3,8 +3,9 @@ const cron = require('node-cron');
 import execute from '../lib/execute.js';
 export const cmds = ["iklan"];
 export const exec = async (bot, msg, chatId, messageId) => {
-showMainMenu(chatId);
+        showMainMenu(chatId);
 };
+
 // Store group IDs, settings, and message templates
 let groups = [];
 let settings = {
@@ -40,6 +41,12 @@ function scheduleMessages() {
     });
 }
 
+// Command to start the bot and show the main menu
+bot.onText(/\/start/, (msg) => {
+    const chatId = msg.chat.id;
+    showMainMenu(chatId);
+});
+
 // Function to show the main menu with inline buttons
 function showMainMenu(chatId) {
     const options = {
@@ -47,6 +54,7 @@ function showMainMenu(chatId) {
             inline_keyboard: [
                 [{ text: 'Add Group', callback_data: 'add_group' }],
                 [{ text: 'View Groups', callback_data: 'view_groups' }],
+                [{ text: 'Delete Group', callback_data: 'delete_group' }],
                 [{ text: 'Manage Templates', callback_data: 'manage_templates' }],
                 [{ text: 'Set Morning Time', callback_data: 'set_morning_time' }],
                 [{ text: 'Set Evening Time', callback_data: 'set_evening_time' }],
@@ -67,6 +75,21 @@ bot.on('callback_query', (callbackQuery) => {
     } else if (data === 'view_groups') {
         const groupList = groups.length > 0 ? groups.join('\n') : 'No groups added yet.';
         bot.sendMessage(chatId, `Groups:\n${groupList}`);
+    } else if (data === 'delete_group') {
+        if (groups.length === 0) {
+            bot.sendMessage(chatId, 'No groups to delete.');
+        } else {
+            const groupButtons = groups.map(group => [{ text: `Delete Group ${group}`, callback_data: `deletegroup_${group}` }]);
+            bot.sendMessage(chatId, 'Select a group to delete:', {
+                reply_markup: {
+                    inline_keyboard: groupButtons,
+                },
+            });
+        }
+    } else if (data.startsWith('deletegroup_')) {
+        const groupId = data.split('_')[1];
+        groups = groups.filter(group => group !== groupId);
+        bot.sendMessage(chatId, `Group ${groupId} has been deleted.`);
     } else if (data === 'manage_templates') {
         showTemplateMenu(chatId);
     } else if (data === 'set_morning_time') {
